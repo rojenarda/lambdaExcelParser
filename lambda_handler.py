@@ -1,4 +1,4 @@
-﻿import os
+﻿# import os
 import io
 import json
 import boto3
@@ -6,8 +6,17 @@ import traceback
 import pandas as pd
 
 
+# test data start
+class os:
+    environ = {
+        'BUCKET_NAME': 'cdl-compliance-checker-excel-test-bucket',
+        'EXCEL_FILE_KEY': 'test.xlsx',
+        'TABLE_NAME': 'excel-test-table'
+    }
+# test data end
+
 def parse_json(json: dict, index_key: str, *args) -> list:
-    f'''
+    '''
     Parses json created by pandas.
     Provide column names to be extracted
     :param json: dict created by pandas
@@ -22,8 +31,9 @@ def parse_json(json: dict, index_key: str, *args) -> list:
     
     formatted_json = list()
     
-    for index, value in json[index_key]:
-        new_row = dict((index_key, value))
+    for index in json[index_key]:
+        new_row = dict()
+        new_row[index_key] = json[index_key][index]
         for col in args:
             new_row[col] = json[col][index]
         formatted_json.append(new_row)
@@ -54,3 +64,6 @@ def lambda_handler():
         write_to_dynamodb(formatted_json)
     except:
         print(traceback.format_exc())
+
+if __name__ == '__main__':
+    lambda_handler()
