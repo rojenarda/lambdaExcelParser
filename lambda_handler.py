@@ -35,6 +35,13 @@ def parse_json(json: dict, index_key: str, *args) -> list:
         new_row = dict()
         new_row[index_key] = json[index_key][index]
         for col in args:
+            if col not in json:
+                raise Exception(f'Column {col} not found in json')
+
+            # Data correctness checks
+            if col == 'email' and '@' not in json[col][index]:
+                raise Exception(f'Invalid email: {json[col][index]}')
+
             new_row[col] = json[col][index]
         formatted_json.append(new_row)
         
