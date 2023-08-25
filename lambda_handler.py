@@ -28,9 +28,9 @@ def parse_json(json: dict, index_key: str, *args) -> list:
         ...
     ]
     '''
-    
+
     formatted_json = list()
-    
+
     for index in json[index_key]:
         new_row = dict()
         new_row[index_key] = json[index_key][index]
@@ -53,8 +53,7 @@ def write_to_dynamodb(items: list):
     with table.batch_writer() as batch:
         for item in items:
             reponse = batch.put_item(Item=item)
-            
-        
+
 
 def lambda_handler():
     try:
